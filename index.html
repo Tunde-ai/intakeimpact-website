@@ -2089,9 +2089,13 @@
             }
 
             .deck-image.expanded {
+                transform: translateY(-4px);
+                z-index: 100;
+            }
+            #beverages .deck-image.expanded {
                 transform: scale(2.2);
+                transform-origin: center top;
                 z-index: 1000;
-                box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(5, 191, 219, 0.3);
             }
 
             .deck-image-featured {
@@ -2241,10 +2245,77 @@
         }
 
         .deck-image:hover {
-            transform: scale(1.8);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 30px rgba(5, 191, 219, 0.2);
+            z-index: 10;
+        }
+
+        #beverages .deck-image:hover {
+            transform: scale(2.8);
+            transform-origin: center top;
             box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(5, 191, 219, 0.3);
             z-index: 1000;
+            cursor: zoom-in;
         }
+
+        #beverages .product-showcase {
+            overflow: visible;
+            position: relative;
+        }
+
+        .zoom-hint-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .zoom-hint-label {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        .zoom-hint-wrapper:hover .zoom-hint-label {
+            opacity: 0;
+        }
+
+        .img-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+        .img-lightbox-img {
+            max-width: 92vw;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            object-fit: contain;
+        }
+        .img-lightbox-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 36px;
+            cursor: pointer;
+            line-height: 1;
+            opacity: 0.8;
+        }
+        .img-lightbox-close:hover { opacity: 1; }
 
         .deck-image-gold {
             border: 3px solid var(--gold);
@@ -2628,20 +2699,7 @@
             background-color: #e8f4f8;
         }
 
-        /* Bug #16: Corporate Partnership slide hover zoom */
-        .product-showcase {
-            overflow: visible;
-        }
-        .deck-image:hover {
-            transform: scale(2.8);
-            transform-origin: center top;
-        }
-        @media (max-width: 640px) {
-            .deck-image.expanded {
-                transform: scale(3.5);
-                transform-origin: center top;
-            }
-        }
+        /* Bug #16: Corporate Partnership slide hover zoom — moved to main .deck-image block */
 
     </style>
 </head>
@@ -3392,6 +3450,7 @@
                         <img src="./images/Highlights_Ad_Design_New_R7-01-1536x864.jpg"
                              alt="Mitch Richmond Career Highlights - NBA All-Star"
                              class="deck-image"
+                             data-lightbox="true"
                              loading="lazy">
                     </div>
 
@@ -3423,10 +3482,13 @@
 
                 <!-- Product Showcase -->
                 <div class="product-showcase" data-animate>
-                    <img src="./images/New_Can_ad_design_R8-01-01-1-1536x864.jpg"
-                         alt="InTake Energy + Water - MVPs Special Edition Blueberry"
-                         class="deck-image"
-                         loading="lazy">
+                    <div class="zoom-hint-wrapper">
+                        <img src="./images/New_Can_ad_design_R8-01-01-1-1536x864.jpg"
+                             alt="InTake Energy + Water - MVPs Special Edition Blueberry"
+                             class="deck-image"
+                             loading="lazy">
+                        <span class="zoom-hint-label">🔍 Hover to enlarge</span>
+                    </div>
                 </div>
 
                 <div class="beverages-content">
@@ -4578,6 +4640,39 @@
                 }
             });
         });
+        // ============================================
+        // LIGHTBOX FOR DECK IMAGES
+        // ============================================
+        (function() {
+            const lightbox = document.getElementById('img-lightbox');
+            if (!lightbox) return;
+            const lightboxImg = lightbox.querySelector('.img-lightbox-img');
+            const closeBtn = lightbox.querySelector('.img-lightbox-close');
+
+            document.querySelectorAll('.deck-image[data-lightbox="true"]').forEach(img => {
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightbox.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            closeBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+            function closeLightbox() {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        })();
     </script>
+
+    <div id="img-lightbox" class="img-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" style="display:none">
+        <button class="img-lightbox-close" aria-label="Close">&times;</button>
+        <img class="img-lightbox-img" src="" alt="">
+    </div>
 </body>
 </html>
