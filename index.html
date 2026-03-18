@@ -1323,9 +1323,6 @@
             color: var(--gray-light);
         }
 
-            transform: scale(1.2);
-        }
-
         .timeline {
             margin: 4rem 0;
         }
@@ -2599,6 +2596,53 @@
             }
         }
 
+        /* ============================================
+           BUG FIXES
+           ============================================ */
+
+        /* Bug #6: Programs grid — 2x2 layout for 4 cards */
+        #programs .programs-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (max-width: 640px) {
+            #programs .programs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Bug #7: Eliminate large vertical white space gaps from hidden elements */
+        .mvp-parallax-bg {
+            display: none;
+        }
+        #leadership .mvp-parallax-bg {
+            display: block;
+        }
+
+        /* Bug #8: Fundraising progress bar visibility */
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--primary-teal), var(--accent-cyan));
+            border-radius: 4px;
+            height: 100%;
+        }
+        .progress-bar-container {
+            background-color: #e8f4f8;
+        }
+
+        /* Bug #16: Corporate Partnership slide hover zoom */
+        .product-showcase {
+            overflow: visible;
+        }
+        .deck-image:hover {
+            transform: scale(2.8);
+            transform-origin: center top;
+        }
+        @media (max-width: 640px) {
+            .deck-image.expanded {
+                transform: scale(3.5);
+                transform-origin: center top;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -2646,7 +2690,7 @@
                         </div>
                         <div class="slide-overlay"></div>
                         <div class="slide-content">
-                            <h1>NBA Hall of Famer<br>Mitch &ldquo;The Rock&rdquo; Richmond</h1>
+                            <h1 aria-label="NBA Hall of Famer Mitch The Rock Richmond">NBA Hall of Famer<br>Mitch &ldquo;The Rock&rdquo; Richmond</h1>
                             <p>Co-Founder &amp; MVP Ambassador &mdash; Leading the charge for U.S. Veterans and Gold Star Families</p>
                             <a href="#leadership" class="btn btn-primary">Meet Our Leadership</a>
                         </div>
@@ -2852,15 +2896,15 @@
                 <div class="impact-stats">
                     <div class="stat-item">
                         <div class="stat-number" data-target="500">0</div>
-                        <div class="stat-label">Veterans Served</div>
+                        <div class="stat-label">Veterans Served (Goal)</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" data-target="50">0</div>
-                        <div class="stat-label">Community Events</div>
+                        <div class="stat-label">Community Events (Goal)</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" data-target="100">0</div>
-                        <div class="stat-label">$K+ Raised</div>
+                        <div class="stat-label">$100K+ Raised (Goal)</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" data-target="6">0</div>
@@ -2980,6 +3024,7 @@
                             <i class="fas fa-bullhorn"></i>
                         </div>
                         <div class="program-body">
+                            <div class="program-image"><img src="images/MVPs_Campaign_Flyer.jpg" alt="MVPs PSA Campaign" class="deck-image program-card-image" loading="lazy"></div>
                             <h3>MVPs PSA Campaign</h3>
                             <p>
                                 Our flagship awareness initiative featuring print, audio, and film public service
@@ -3421,11 +3466,11 @@
                     <div class="initiative-metrics">
                         <div class="metric-card">
                             <div class="metric-number" data-target="500">0</div>
-                            <div class="metric-label">Veterans Served</div>
+                            <div class="metric-label">Veterans Served (Goal)</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-number" data-target="125">0</div>
-                            <div class="metric-label">Families Supported</div>
+                            <div class="metric-label">Families Supported (Goal)</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-number" data-target="50">0</div>
@@ -3487,8 +3532,8 @@
                             <div class="timeline-content">
                                 <h4>Program Expansion</h4>
                                 <p>
-                                    Expanded our reach with new employment initiatives, health and wellness programs,
-                                    and volunteer opportunities serving 500+ veterans and 125+ families.
+                                    Expanding our reach with new employment initiatives, health and wellness programs,
+                                    and volunteer opportunities. Goal: 500+ veterans and 125+ families served.
                                 </p>
                             </div>
                         </div>
@@ -3540,7 +3585,8 @@
                     </div>
 
                     <div class="initiative-cta">
-                        <a href="#contact" class="btn btn-gold">Download Our Impact Report</a>
+                        <!-- TODO: Replace with actual PDF link -->
+                        <a href="#contact" class="btn btn-gold">Request Our Impact Report</a>
                         <a href="#sponsorship" class="btn btn-secondary">Become a Sponsor</a>
                     </div>
                     <div class="section-top-btn"><a href="#hero"><i class="fas fa-arrow-up"></i> Back to Top</a></div>
@@ -3652,25 +3698,25 @@
                 </div>
 
                 <div class="ways-to-support">
-                    <div class="support-card">
+                    <div class="support-card" data-action="donate" style="cursor:pointer;">
                         <i class="fas fa-hand-holding-usd"></i>
                         <h4>Make a Donation</h4>
                         <p>Your tax-deductible contribution directly supports veterans and Gold Star families</p>
                     </div>
 
-                    <div class="support-card">
+                    <div class="support-card" data-action="volunteer" style="cursor:pointer;">
                         <i class="fas fa-users"></i>
                         <h4>Volunteer</h4>
                         <p>Join our team of dedicated volunteers making a difference in our community</p>
                     </div>
 
-                    <div class="support-card">
+                    <div class="support-card" data-action="partnership" style="cursor:pointer;">
                         <i class="fas fa-handshake"></i>
                         <h4>Corporate Partnership</h4>
                         <p>Align your brand with our mission through strategic partnership opportunities</p>
                     </div>
 
-                    <div class="support-card">
+                    <div class="support-card" data-action="share" style="cursor:pointer;">
                         <i class="fas fa-share-alt"></i>
                         <h4>Spread the Word</h4>
                         <p>Share our mission on social media and help us reach more people who need support</p>
@@ -3742,19 +3788,21 @@
                     <input type="email" placeholder="Your email address" required>
                     <button type="submit">Subscribe</button>
                 </form>
+                <!-- TODO: Update with real social media URLs -->
                 <div class="social-links">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>&copy; 2026 InTake Impact Corp. All rights reserved. | EIN: [Tax ID] |
-            <a href="#" style="color: var(--accent-cyan);">Privacy Policy</a> |
-            <a href="#" style="color: var(--accent-cyan);">Terms of Service</a></p>
+            <p>&copy; 2026 InTake Impact Corp. All rights reserved. | EIN: Pending |
+<!-- TODO: Create these pages -->
+            <a href="/privacy-policy" style="color: var(--accent-cyan);">Privacy Policy</a> |
+            <a href="/terms-of-service" style="color: var(--accent-cyan);">Terms of Service</a></p>
         </div>
     </footer>
 
@@ -4032,6 +4080,36 @@
             counterObserver.observe(counter);
         });
 
+        // Bug #1: Additional stat-number observer with 0.3 threshold for about section
+        const statCounterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                    const target = parseInt(entry.target.getAttribute('data-target'));
+                    const duration = 1500;
+                    const startTime = performance.now();
+                    function updateCounter(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const current = Math.floor(progress * target);
+                        entry.target.textContent = current + '+';
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            entry.target.textContent = target + '+';
+                        }
+                    }
+                    requestAnimationFrame(updateCounter);
+                    entry.target.classList.add('counted');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('#about .stat-number').forEach(counter => {
+            // Remove from previous observer to avoid double-fire
+            counterObserver.unobserve(counter);
+            statCounterObserver.observe(counter);
+        });
+
         // Beverages percentage counter
         const beveragesStatObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -4114,18 +4192,21 @@
         });
 
         // ============================================
-        // PROGRAM CARDS EXPAND
+        // PROGRAM CARDS EXPAND (Bug #4: toggle text)
         // ============================================
         document.querySelectorAll('.program-card').forEach(card => {
             const expandBtn = card.querySelector('.expand-btn');
+            if (!expandBtn) return;
             expandBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 card.classList.toggle('expanded');
                 const details = card.querySelector('.program-details');
                 if (card.classList.contains('expanded')) {
                     details.style.maxHeight = details.scrollHeight + 'px';
+                    expandBtn.innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
                 } else {
                     details.style.maxHeight = '0';
+                    expandBtn.innerHTML = 'Learn More <i class="fas fa-chevron-down"></i>';
                 }
             });
         });
@@ -4457,6 +4538,45 @@
             if (!e.target.classList.contains('deck-image')) {
                 document.querySelectorAll('.deck-image.expanded').forEach(el => el.classList.remove('expanded'));
             }
+        });
+
+        // ============================================
+        // BUG #13: SUPPORT CARD ACTIONS
+        // ============================================
+        document.querySelectorAll('.support-card[data-action]').forEach(card => {
+            card.addEventListener('click', () => {
+                const action = card.getAttribute('data-action');
+                if (action === 'donate') {
+                    donateOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                } else if (action === 'volunteer') {
+                    const contactSection = document.getElementById('contact');
+                    const offset = 80;
+                    window.scrollTo({ top: contactSection.offsetTop - offset, behavior: 'smooth' });
+                    setTimeout(() => {
+                        const interestSelect = document.getElementById('interest');
+                        if (interestSelect) interestSelect.value = 'volunteer';
+                    }, 600);
+                } else if (action === 'partnership') {
+                    const contactSection = document.getElementById('contact');
+                    const offset = 80;
+                    window.scrollTo({ top: contactSection.offsetTop - offset, behavior: 'smooth' });
+                    setTimeout(() => {
+                        const interestSelect = document.getElementById('interest');
+                        if (interestSelect) interestSelect.value = 'partnership';
+                    }, 600);
+                } else if (action === 'share') {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'InTake Impact Corp',
+                            text: 'Support U.S. Veterans and Gold Star Families through InTake Impact Corp.',
+                            url: 'https://intakeimpact.org'
+                        }).catch(() => {});
+                    } else {
+                        window.open('https://twitter.com/intent/tweet?text=Support%20U.S.%20Veterans%20and%20Gold%20Star%20Families%20through%20InTake%20Impact%20Corp.%20https://intakeimpact.org', '_blank');
+                    }
+                }
+            });
         });
     </script>
 </body>
