@@ -2089,13 +2089,15 @@
             }
 
             .deck-image.expanded {
-                transform: translateY(-4px);
+                transform: translateY(-6px);
                 z-index: 100;
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
             }
             #beverages .deck-image.expanded {
                 transform: scale(2.2);
                 transform-origin: center top;
                 z-index: 1000;
+                box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(5, 191, 219, 0.3);
             }
 
             .deck-image-featured {
@@ -2245,8 +2247,8 @@
         }
 
         .deck-image:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 30px rgba(5, 191, 219, 0.2);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(5, 191, 219, 0.2);
             z-index: 10;
         }
 
@@ -3852,10 +3854,11 @@
                 </form>
                 <!-- TODO: Update with real social media URLs -->
                 <div class="social-links">
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <!-- TODO: Replace with actual verified social URLs -->
+                    <a href="https://www.facebook.com/intakeimpactcorp" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/intakeimpact" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/intakeimpact" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/intakeimpact" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
@@ -4667,6 +4670,99 @@
                 lightbox.style.display = 'none';
                 document.body.style.overflow = '';
             }
+        })();
+
+        // ============================================
+        // FIX: About section counter animation
+        // ============================================
+        (function() {
+          const aboutCounters = document.querySelectorAll('#about .stat-number[data-target]');
+          if (!aboutCounters.length) return;
+
+          function animateCounter(el) {
+            if (el.classList.contains('counted')) return;
+            el.classList.add('counted');
+            const target = parseInt(el.getAttribute('data-target'), 10);
+            const duration = 1500;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              const current = Math.round(eased * target);
+              el.textContent = current + '+';
+              if (progress < 1) requestAnimationFrame(update);
+              else el.textContent = target + '+';
+            }
+            requestAnimationFrame(update);
+          }
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.3 });
+
+          aboutCounters.forEach(counter => observer.observe(counter));
+        })();
+
+        // ============================================
+        // FIX: Wire Donate Now links to open the modal
+        // ============================================
+        (function() {
+          const overlay = document.getElementById('donate-overlay');
+          if (!overlay) return;
+          const closeBtn = overlay.querySelector('.close-donate') || overlay.querySelector('button');
+
+          function openDonateModal(e) {
+            e.preventDefault();
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+          }
+          function closeDonateModal() {
+            overlay.style.display = 'none';
+            document.body.style.overflow = '';
+          }
+
+          document.querySelectorAll('a[href="#donate"]').forEach(link => {
+            link.addEventListener('click', openDonateModal);
+          });
+          if (closeBtn) closeBtn.addEventListener('click', closeDonateModal);
+          overlay.addEventListener('click', e => { if (e.target === overlay) closeDonateModal(); });
+          document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.style.display === 'flex') closeDonateModal(); });
+        })();
+
+        // ============================================
+        // FIX: Programs Learn More expand buttons
+        // ============================================
+        (function() {
+          document.querySelectorAll('.program-card').forEach(card => {
+            const btn = card.querySelector('.expand-btn');
+            if (!btn) return;
+
+            let details = card.querySelector('.program-details');
+            if (details) {
+              details.style.cssText = 'max-height: 0; overflow: hidden; transition: max-height 0.4s ease;';
+            }
+
+            btn.style.cursor = 'pointer';
+            btn.addEventListener('click', () => {
+              const isExpanded = card.classList.contains('expanded');
+              if (isExpanded) {
+                card.classList.remove('expanded');
+                if (details) details.style.maxHeight = '0';
+                btn.innerHTML = 'Learn More <i class="fas fa-chevron-down"></i>';
+              } else {
+                card.classList.add('expanded');
+                if (details) details.style.maxHeight = details.scrollHeight + 'px';
+                btn.innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
+              }
+            });
+          });
         })();
     </script>
 
